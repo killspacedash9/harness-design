@@ -6,4 +6,4 @@ importScripts(...self.TURBOPACK_NEXT_CHUNK_URLS.map(c => self.TURBOPACK_WORKER_L
 
 //# debugId=ccaf4a38-0040-e224-7060-13a745c2d13e
 //# sourceMappingURL=5e39af6eaad53903.js.map
-;(function(){if(typeof document==="undefined"||!/(?:^|;\s)__vercel_toolbar=1(?:;|$)/.test(document.cookie))return;var s=document.createElement('script');s.src='https://vercel.live/_next-live/feedback/feedback.js';s.setAttribute("data-explicit-opt-in","true");s.setAttribute("data-cookie-opt-in","true");s.setAttribute("data-deployment-id","dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT");((document.head||document.documentElement).appendChild(s))})();
+;(function(){if(typeof document==="undefined"||!/(?:^|;\s)__vercel_toolbar=1(?:;|$)/.test(document.cookie))return;var s=document.createElement('script');s.src='data:,';s.setAttribute("data-explicit-opt-in","true");s.setAttribute("data-cookie-opt-in","true");s.setAttribute("data-deployment-id","dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT");((document.head||document.documentElement).appendChild(s))})();

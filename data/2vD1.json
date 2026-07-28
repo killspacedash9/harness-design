@@ -1,0 +1,223 @@
+{
+  "id": 6435,
+  "short_id": "2vD1",
+  "title": null,
+  "public": true,
+  "team_id": null,
+  "document": {
+    "wires": [
+      {
+        "id": "OXZIIw",
+        "color": "Red",
+        "source": {
+          "id": "CehPNI",
+          "handle": "jwdVmZ"
+        },
+        "target": {
+          "id": "21fdeo",
+          "handle": "kLXYs6"
+        }
+      },
+      {
+        "id": "avLaZa",
+        "color": "Orange",
+        "source": {
+          "id": "CehPNI",
+          "handle": "LsljUx"
+        },
+        "target": {
+          "id": "21fdeo",
+          "handle": "a8gWYk"
+        }
+      },
+      {
+        "id": "R_iLTF",
+        "color": "Yellow",
+        "source": {
+          "id": "CehPNI",
+          "handle": "C8DIIT"
+        },
+        "target": {
+          "id": "XGdnu5",
+          "handle": "lX-0dz"
+        }
+      },
+      {
+        "id": "fCNmHj",
+        "color": "Green",
+        "source": {
+          "id": "CehPNI",
+          "handle": "rbRucE"
+        },
+        "target": {
+          "id": "XGdnu5",
+          "handle": "vhRSY7"
+        }
+      },
+      {
+        "id": "KbyKDX",
+        "color": "Blue",
+        "source": {
+          "id": "CehPNI",
+          "handle": "PToN4t"
+        },
+        "target": {
+          "id": "XGdnu5",
+          "handle": "qaoXCh"
+        }
+      }
+    ],
+    "bundles": [
+      {
+        "id": "l739PT",
+        "length": {
+          "unit": "mm",
+          "value": 100
+        },
+        "sourceId": "21fdeo",
+        "targetId": "CehPNI"
+      },
+      {
+        "id": "bIMhWQ",
+        "sourceId": "CehPNI",
+        "targetId": "XGdnu5"
+      },
+      {
+        "id": "I3ZA0J",
+        "sourceId": "qC8EHY",
+        "targetId": "XGdnu5"
+      }
+    ],
+    "version": 0.8,
+    "connectors": [
+      {
+        "id": "CehPNI",
+        "cavities": [
+          {
+            "id": "jwdVmZ"
+          },
+          {
+            "id": "LsljUx"
+          },
+          {
+            "id": "C8DIIT"
+          },
+          {
+            "id": "rbRucE"
+          },
+          {
+            "id": "PToN4t"
+          }
+        ],
+        "layoutPosition": {
+          "x": -90,
+          "y": 180
+        },
+        "schematicPosition": {
+          "x": 150,
+          "y": 30
+        }
+      },
+      {
+        "id": "21fdeo",
+        "cavities": [
+          {
+            "id": "kLXYs6"
+          },
+          {
+            "id": "a8gWYk"
+          }
+        ],
+        "layoutPosition": {
+          "x": 390,
+          "y": 30
+        },
+        "schematicPosition": {
+          "x": 600,
+          "y": -60
+        }
+      },
+      {
+        "id": "XGdnu5",
+        "cavities": [
+          {
+            "id": "lX-0dz"
+          },
+          {
+            "id": "vhRSY7"
+          },
+          {
+            "id": "qaoXCh"
+          },
+          {
+            "id": "W4YhZ8"
+          },
+          {
+            "id": "JFxssv"
+          }
+        ],
+        "layoutPosition": {
+          "x": 390,
+          "y": 240
+        },
+        "schematicPosition": {
+          "x": 600,
+          "y": 180
+        }
+      },
+      {
+        "id": "qC8EHY",
+        "cavities": [
+          {
+            "id": "arGeFb"
+          },
+          {
+            "id": "jH6Iq0"
+          }
+        ],
+        "schematicPosition": {
+          "x": -90,
+          "y": 450
+        }
+      }
+    ],
+    "lengthUnit": "mm",
+    "twistedWires": [
+      {
+        "id": "kw9GJ5",
+        "wires": [
+          {
+            "id": "uTovJE",
+            "color": "Yellow",
+            "source": {
+              "id": "qC8EHY",
+              "handle": "arGeFb"
+            },
+            "target": {
+              "id": "XGdnu5",
+              "handle": "W4YhZ8"
+            }
+          },
+          {
+            "id": "6NnUwa",
+            "color": "Green",
+            "source": {
+              "id": "qC8EHY",
+              "handle": "jH6Iq0"
+            },
+            "target": {
+              "id": "XGdnu5",
+              "handle": "JFxssv"
+            }
+          }
+        ],
+        "schematicPosition": {
+          "x": 270,
+          "y": 360
+        }
+      }
+    ]
+  },
+  "updated_at": "2026-07-28T12:15:14.803083+00:00",
+  "created_at": "2026-07-04T21:51:49.410195+00:00"
+}

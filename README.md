@@ -1,30 +1,59 @@
-# harness.design local mirror
+# harness.design mirror
 
-Static local mirror of `harness.design` plus the public embedded demo from `app.harness.design/zY/demo`.
+Reverse-engineered documentation and a self-contained static mirror of the harness.design editor.
 
-## Run
+## Static editor
+
+The GitHub Pages root redirects to:
+
+- Project path: `/harness-design/2vD1/`
+- Public URL: `https://killspacedash9.github.io/harness-design/2vD1/`
+
+The `/2vD1` document and all required application assets are embedded locally. The editor runs in demo mode: editor controls and in-memory edits work, but refreshing resets the document.
+
+Runtime services removed or neutralized:
+
+- Supabase database, auth, and realtime
+- Sentry
+- Vercel Analytics and Toolbar
+- Userback
+- External frames, forms, images, and connections via CSP
+
+Rebuild and verify:
 
 ```bash
-npm start
+node scripts/build-2vD1.mjs
+node scripts/verify-build.mjs
 ```
 
-Open:
+The builder contacts the public production route at build time to refresh application assets. It uses the committed `data/2vD1.json` snapshot by default, recursively mirrors Turbopack assets, rewrites the GitHub Pages base path, embeds the harness JSON, and applies the static runtime patches.
 
-- Landing page: <http://localhost:4173/>
-- App demo directly: <http://localhost:4173/zY/demo?allowEdit=true&allowControls=false&highlightNets=true&views=Schematic%2CLayout&theme=dark>
-
-## Refresh the downloaded files
+To deliberately refresh the public document snapshot, supply its current public key explicitly:
 
 ```bash
-npm run refresh
+HARNESS_REFRESH_DOCUMENT=1 HARNESS_SUPABASE_KEY='…' node scripts/build-2vD1.mjs
 ```
 
-Downloaded files are listed in `mirror-manifest.json`. Source maps were checked, but the deployed site returned 404 for the `.map` files at the time this mirror was created.
+## Local verification server
 
-## Local backend shim
+Serve the repository at the same project path used by GitHub Pages:
 
-The app bundle used Supabase. The mirrored bundle is patched to call `http://localhost:4173/supabase`, and `server.mjs` provides a small PostgREST-like JSON backend backed by `data/db.json`.
+```bash
+mkdir -p /tmp/harness-pages
+ln -s "$PWD" /tmp/harness-pages/harness-design
+python3 -m http.server 4174 --directory /tmp/harness-pages
+```
 
-See `docs/backend-dependencies.md` for extracted tables/RPCs and `supabase/schema.sql` for a draft real Supabase schema.
+Open `http://127.0.0.1:4174/harness-design/2vD1/`.
 
-Still stubbed: auth/login, realtime collaboration, billing, email delivery, and PDF generation.
+`server.mjs` remains available for legacy mirror/API-shim development on `http://127.0.0.1:4173`.
+
+## Repository layout
+
+- `2vD1/` — static editor route with embedded document
+- `_next/` — mirrored and sanitized application chunks/assets
+- `assets/` — legacy marketing-site assets
+- `docs/` — mirrored public documentation
+- `src/` — independent editable reconstruction
+- `scripts/build-2vD1.mjs` — live-route mirroring/static conversion
+- `scripts/verify-build.mjs` — endpoint, asset, CSP, and runtime-patch checks
