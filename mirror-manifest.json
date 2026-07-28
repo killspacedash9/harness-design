@@ -1,0 +1,450 @@
+{
+  "createdAt": "2026-07-28T10:34:11.860Z",
+  "files": [
+    {
+      "url": "https://www.harness.design/",
+      "status": "ok",
+      "file": "index.html"
+    },
+    {
+      "url": "https://app.harness.design/zY/demo?allowEdit=true&allowControls=false&highlightNets=true&views=Schematic%2CLayout&theme=dark",
+      "status": "ok",
+      "file": "zY/demo/index.html"
+    },
+    {
+      "url": "https://www.harness.design/icon.png",
+      "status": "ok",
+      "file": "icon.png"
+    },
+    {
+      "url": "https://www.harness.design/favicon.ico",
+      "status": "ok",
+      "file": "favicon.ico"
+    },
+    {
+      "url": "https://www.harness.design/icon.svg",
+      "status": "ok",
+      "file": "icon.svg"
+    },
+    {
+      "url": "https://www.harness.design/harness-design-logo.svg",
+      "status": "ok",
+      "file": "harness-design-logo.svg"
+    },
+    {
+      "url": "https://www.harness.design/try-arrow.svg",
+      "status": "ok",
+      "file": "try-arrow.svg"
+    },
+    {
+      "url": "https://www.harness.design/bottom-secondary-feature.png",
+      "status": "ok",
+      "file": "bottom-secondary-feature.png"
+    },
+    {
+      "url": "https://www.harness.design/cut-list.png",
+      "status": "ok",
+      "file": "cut-list.png"
+    },
+    {
+      "url": "https://www.harness.design/export.png",
+      "status": "ok",
+      "file": "export.png"
+    },
+    {
+      "url": "https://www.harness.design/layout.png",
+      "status": "ok",
+      "file": "layout.png"
+    },
+    {
+      "url": "https://www.harness.design/online.png",
+      "status": "ok",
+      "file": "online.png"
+    },
+    {
+      "url": "https://www.harness.design/parts.png",
+      "status": "ok",
+      "file": "parts.png"
+    },
+    {
+      "url": "https://www.harness.design/top-secondary-feature.png",
+      "status": "ok",
+      "file": "top-secondary-feature.png"
+    },
+    {
+      "url": "https://www.harness.design/validation.png",
+      "status": "ok",
+      "file": "validation.png"
+    },
+    {
+      "url": "https://www.harness.design/video-thumbnail.png",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/icon.svg",
+      "status": "ok",
+      "file": "icon.svg"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+      "status": "ok",
+      "file": "vendor/fonts.googleapis.com/css2-fda31579c6.css"
+    },
+    {
+      "url": "https://www.harness.design/assets/index-Bnnwkbla.js",
+      "status": "ok",
+      "file": "assets/index-Bnnwkbla.js"
+    },
+    {
+      "url": "https://www.harness.design/assets/index-DVRagH3Q.css",
+      "status": "ok",
+      "file": "assets/index-DVRagH3Q.css"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/f2d56b600ad12a1c.css?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/f2d56b600ad12a1c.css"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/0b4fbe70da918d1f.css?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/0b4fbe70da918d1f.css"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/f26263621cf0da22.js?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/f26263621cf0da22.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/2556cea47d63ccfa.js?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/2556cea47d63ccfa.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/721e5c1fe61bccbf.js?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/721e5c1fe61bccbf.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/f21b947c5dc49832.js?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/f21b947c5dc49832.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/7e6d1db19f073dd1.js?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/7e6d1db19f073dd1.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/2c50d98779617da0.js?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/2c50d98779617da0.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/turbopack-d45c0dbbd958413b.js?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/turbopack-d45c0dbbd958413b.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/87bb59a90d5808c6.js?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/87bb59a90d5808c6.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/a32cd8417d3354be.js?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/a32cd8417d3354be.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/e56dbf514065f3ae.js?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/e56dbf514065f3ae.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/7df5840879642c5b.js?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/7df5840879642c5b.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/ebe94f77d09738d4.js?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/ebe94f77d09738d4.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/ab20908d54f1e59f.js?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/ab20908d54f1e59f.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/a6dad97d9634a72d.js?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "ok",
+      "file": "_next/static/chunks/a6dad97d9634a72d.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2",
+      "status": "ok",
+      "file": "_next/static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfMZg.ttf",
+      "status": "ok",
+      "file": "vendor/fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfMZg.ttf"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fMZg.ttf",
+      "status": "ok",
+      "file": "vendor/fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fMZg.ttf"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZg.ttf",
+      "status": "ok",
+      "file": "vendor/fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZg.ttf"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYMZg.ttf",
+      "status": "ok",
+      "file": "vendor/fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYMZg.ttf"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/f26263621cf0da22.js",
+      "status": "ok",
+      "file": "_next/static/chunks/f26263621cf0da22.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/2556cea47d63ccfa.js",
+      "status": "ok",
+      "file": "_next/static/chunks/2556cea47d63ccfa.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/721e5c1fe61bccbf.js",
+      "status": "ok",
+      "file": "_next/static/chunks/721e5c1fe61bccbf.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/f21b947c5dc49832.js",
+      "status": "ok",
+      "file": "_next/static/chunks/f21b947c5dc49832.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/7e6d1db19f073dd1.js",
+      "status": "ok",
+      "file": "_next/static/chunks/7e6d1db19f073dd1.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/2c50d98779617da0.js",
+      "status": "ok",
+      "file": "_next/static/chunks/2c50d98779617da0.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/861e372f66ff9b51.js",
+      "status": "ok",
+      "file": "_next/static/chunks/861e372f66ff9b51.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/368c70fcfe3c496e.js",
+      "status": "ok",
+      "file": "_next/static/chunks/368c70fcfe3c496e.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/2f4076988055feed.js",
+      "status": "ok",
+      "file": "_next/static/chunks/2f4076988055feed.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/6e42f5af53dff23a.js",
+      "status": "ok",
+      "file": "_next/static/chunks/6e42f5af53dff23a.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/f29c2c2f8ccd16c3.js",
+      "status": "ok",
+      "file": "_next/static/chunks/f29c2c2f8ccd16c3.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/44e0614d7c00c243.js",
+      "status": "ok",
+      "file": "_next/static/chunks/44e0614d7c00c243.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/9d8d90f233d53480.js",
+      "status": "ok",
+      "file": "_next/static/chunks/9d8d90f233d53480.js"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/d41c17dd0054f88c.css",
+      "status": "ok",
+      "file": "_next/static/chunks/d41c17dd0054f88c.css"
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/56b0e112e6c4267d.js",
+      "status": "ok",
+      "file": "_next/static/chunks/56b0e112e6c4267d.js"
+    },
+    {
+      "url": "https://www.harness.design/assets/index-Bnnwkbla.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://www.harness.design/assets/index-DVRagH3Q.css.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/f2d56b600ad12a1c.css.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/0b4fbe70da918d1f.css.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/f26263621cf0da22.js.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/2556cea47d63ccfa.js.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/721e5c1fe61bccbf.js.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/f21b947c5dc49832.js.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/7e6d1db19f073dd1.js.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/2c50d98779617da0.js.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/turbopack-d45c0dbbd958413b.js.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/87bb59a90d5808c6.js.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/a32cd8417d3354be.js.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/e56dbf514065f3ae.js.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/7df5840879642c5b.js.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/ebe94f77d09738d4.js.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/ab20908d54f1e59f.js.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/a6dad97d9634a72d.js.map?dpl=dpl_BB8GhUCHHUYaDkFnhrRtx2u1GFdT",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/f26263621cf0da22.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/2556cea47d63ccfa.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/721e5c1fe61bccbf.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/f21b947c5dc49832.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/7e6d1db19f073dd1.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/2c50d98779617da0.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/861e372f66ff9b51.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/368c70fcfe3c496e.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/2f4076988055feed.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/6e42f5af53dff23a.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/f29c2c2f8ccd16c3.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/44e0614d7c00c243.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/9d8d90f233d53480.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/d41c17dd0054f88c.css.map",
+      "status": "HTTP 404",
+      "file": ""
+    },
+    {
+      "url": "https://app.harness.design/_next/static/chunks/56b0e112e6c4267d.js.map",
+      "status": "HTTP 404",
+      "file": ""
+    }
+  ]
+}
