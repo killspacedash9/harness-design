@@ -26,9 +26,9 @@ function isAssetLike(u, force = false) {
   if (u.pathname.startsWith('/_vercel/insights') || u.pathname.includes('/insights/script')) return false;
   if (u.hostname === 'fonts.googleapis.com') return u.pathname.startsWith('/css');
   if (u.hostname === 'fonts.gstatic.com') return u.pathname !== '/';
-  if (u.hostname === 'app.harness.design') return u.pathname.startsWith('/harness-design/_next/static/') || u.pathname === '/harness-design/icon.svg';
+  if (u.hostname === 'app.harness.design') return u.pathname.startsWith('/_next/static/') || u.pathname === '/icon.svg';
   if (u.hostname === 'www.harness.design' || u.hostname === 'harness.design') {
-    return u.pathname === '/' || u.pathname.startsWith('/harness-design/assets/') || STATIC_EXT.test(u.pathname);
+    return u.pathname === '/' || u.pathname.startsWith('/assets/') || STATIC_EXT.test(u.pathname);
   }
   return STATIC_EXT.test(u.pathname);
 }
@@ -63,7 +63,7 @@ function localPathFor(u, contentType = '') {
   if ((u.hostname === 'www.harness.design' || u.hostname === 'harness.design') && p === '/') {
     return 'index.html';
   }
-  if (u.hostname === 'app.harness.design' && p === '/harness-design/zY/demo') {
+  if (u.hostname === 'app.harness.design' && p === '/zY/demo') {
     return 'zY/demo/index.html';
   }
 
@@ -115,17 +115,17 @@ function extractUrls(text, baseUrl, contentType) {
     if (s.startsWith('/')) {
       let pathname = '';
       try { pathname = new URL(s, baseUrl).pathname; } catch { continue; }
-      if (!STATIC_EXT.test(pathname) && !s.startsWith('/harness-design/_next/static/')) continue;
+      if (!STATIC_EXT.test(pathname) && !s.startsWith('/_next/static/')) continue;
     }
     add(s);
   }
 
-  // Escaped Next flight data often contains \"/harness-design/_next/static/...\".
+  // Escaped Next flight data often contains \"/_next/static/...\".
   for (const m of text.matchAll(/\\?"(\/_next\/static\/[^\\"]+)/g)) add(m[1]);
 
   // Turbopack dynamic imports use e.l("static/chunks/...") relative to /_next/.
   for (const m of text.matchAll(/["'`](static\/chunks\/[^"'`]+\.(?:js|css))["'`]/g)) {
-    add('/harness-design/_next/' + m[1]);
+    add('/_next/' + m[1]);
   }
 
   for (const raw of found) enqueue(raw, baseUrl);
@@ -137,11 +137,11 @@ function rewriteText(text, baseUrl) {
   // Make the landing-page embedded app use the local mirrored demo.
   out = out.replaceAll(
     'https://app.harness.design/zY/demo?allowEdit=true&allowControls=false&highlightNets=true&views=Schematic%2CLayout&theme=dark',
-    '/harness-design/zY/demo?allowEdit=true&allowControls=false&highlightNets=true&views=Schematic%2CLayout&theme=dark'
+    '/zY/demo?allowEdit=true&allowControls=false&highlightNets=true&views=Schematic%2CLayout&theme=dark'
   );
 
   // Mirror the absolute logo URL used by the marketing bundle.
-  out = out.replaceAll('https://www.harness.design/harness-design-logo.svg', '/harness-design/harness-design-logo.svg');
+  out = out.replaceAll('https://www.harness.design/harness-design-logo.svg', '/harness-design-logo.svg');
 
   // Point the bundled Supabase browser client at the local compatibility shim in server.mjs.
   out = out.replaceAll(
@@ -209,12 +209,12 @@ async function download(u) {
 for (const url of INITIAL_URLS) enqueue(url, undefined, true);
 // Known root assets referenced by the marketing bundle and app shell.
 for (const asset of [
-  '/harness-design/icon.png','/harness-design/favicon.ico','/harness-design/icon.svg','/harness-design/harness-design-logo.svg','/harness-design/try-arrow.svg',
-  '/harness-design/bottom-secondary-feature.png','/harness-design/cut-list.png','/harness-design/export.png','/harness-design/layout.png','/harness-design/online.png','/harness-design/parts.png','/harness-design/top-secondary-feature.png','/harness-design/validation.png','/harness-design/video-thumbnail.png'
+  '/icon.png','/favicon.ico','/icon.svg','/harness-design-logo.svg','/try-arrow.svg',
+  '/bottom-secondary-feature.png','/cut-list.png','/export.png','/layout.png','/online.png','/parts.png','/top-secondary-feature.png','/validation.png','/video-thumbnail.png'
 ]) {
   enqueue(new URL(asset, 'https://www.harness.design/').href);
 }
-for (const asset of ['/harness-design/icon.svg']) enqueue(new URL(asset, 'https://app.harness.design/').href);
+for (const asset of ['/icon.svg']) enqueue(new URL(asset, 'https://app.harness.design/').href);
 
 while (queue.length) {
   const u = queue.shift();
