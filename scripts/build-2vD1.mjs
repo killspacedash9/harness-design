@@ -163,6 +163,7 @@ function privacyMarkup(documentRow) {
   const bootstrap = `
 window.__EMBEDDED_DOCUMENT__=${safeJSON(documentRow.document)};
 window.__EMBEDDED_DOCUMENT_META__=${safeJSON(meta)};
+window.__HARNESS_STATIC__=true;
 // Belt and suspenders: CSP blocks connections; these stop queued telemetry APIs too.
 try { navigator.sendBeacon = function () { return false; }; } catch (_) {}
 try { window.WebSocket = function () { throw new Error('Network disabled in static build'); }; } catch (_) {}
@@ -196,7 +197,7 @@ function transformLiveHTML(liveHTML, documentRow) {
   const propsEnd = '\\"userName\\":\\"$undefined\\"}]';
   if (!html.includes(propsEnd)) throw new Error('Could not find EditorClient props boundary');
   const escapedSettings = JSON.stringify(embedSettings).replaceAll('"', '\\"');
-  const staticPropsEnd = `\\"userName\\":\\"$undefined\\",\\"demo\\":true,\\"embedSettings\\":${escapedSettings}}]`;
+  const staticPropsEnd = `\\"userName\\":\\"$undefined\\",\\"demo\\":false,\\"embedSettings\\":${escapedSettings}}]`;
   html = html.replace(propsEnd, staticPropsEnd);
 
   const mantineScript = '<script data-mantine-script="true">';
@@ -229,15 +230,19 @@ async function patchApplicationChunks() {
   let loaderPatched = false;
   let supabasePatched = false;
   let sentryPatched = false;
+  let offlineSavePatched = false;
 
   const loaderQuery = 'let{data:t,error:n}=await cB.from("documents").select("document, updated_at, team_id").eq("id",e).single();';
   const staticLoader = 'let t={document:window.__EMBEDDED_DOCUMENT__,updated_at:window.__EMBEDDED_DOCUMENT_META__.updated_at,team_id:null},n=null;';
+  const saveGuard = 'if(cz.getState().isDemo||cR.getState().isRevisionView)return';
+  const offlineSaveGuard = 'if(window.__HARNESS_STATIC__||cz.getState().isDemo||cR.getState().isRevisionView)return';
 
   for (const file of files) {
     let text = await readFile(file, 'utf8');
 
     if (text.includes(staticLoader)) loaderPatched = true;
     if (text.includes('dsn:void 0,enabled:!1')) sentryPatched = true;
+    if (text.includes(offlineSaveGuard)) offlineSavePatched = true;
 
     if (text.includes('supabase-ssr/0.8.0 createBrowserClient') && text.includes('e.s(["createClient"')) {
       const start = text.indexOf('function rx(){');
@@ -256,6 +261,10 @@ async function patchApplicationChunks() {
     if (text.includes(loaderQuery)) {
       text = text.replace(loaderQuery, staticLoader);
       loaderPatched = true;
+    }
+    if (text.includes(saveGuard)) {
+      text = text.replaceAll(saveGuard, offlineSaveGuard);
+      offlineSavePatched = true;
     }
 
     const sentryDsn = /dsn:"https:\/\/[^\"]+\.sentry\.io\/[^\"]+"/;
@@ -280,10 +289,11 @@ async function patchApplicationChunks() {
     await writeFile(file, text);
   }
 
-  if (!loaderPatched) throw new Error('Editor document loader patch did not match');
-  if (!supabasePatched) throw new Error('Supabase client chunk patch did not match');
-  if (!sentryPatched) throw new Error('Sentry initialization patch did not match');
-  console.log('Disabled document backend, Supabase/auth/realtime, Sentry, analytics, feedback, and toolbar transports.');
+  if (!loaderPatched) throw new Error('Document loader patch was not applied');
+  if (!supabasePatched) throw new Error('Supabase client patch was not applied');
+  if (!sentryPatched) throw new Error('Sentry initialization patch was not applied');
+  if (!offlineSavePatched) throw new Error('Offline save guard patch was not applied');
+  console.log('Disabled document backend, remote saves, Supabase/auth/realtime, Sentry, analytics, feedback, and toolbar transports.');
 }
 
 async function writeRootRedirect() {

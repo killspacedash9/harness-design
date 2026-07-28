@@ -289,8 +289,8 @@ async function verifyEditorMeta() {
     console.log('  ⚠ readOnly not explicitly set to false');
     issues++;
   }
-  if (!content.includes('demo":true') && !content.includes('demo\\":true')) {
-    console.log('  ⚠ demo mode not enabled');
+  if (!content.includes('demo":false') && !content.includes('demo\\":false')) {
+    console.log('  ⚠ normal editor mode not enabled');
     issues++;
   }
   if (!content.includes('allowEdit":true') && !content.includes('allowEdit\\":true')) {
@@ -319,7 +319,10 @@ async function verifyStaticRuntimePatches() {
 
   const checks = [
     [html.includes('window.__EMBEDDED_DOCUMENT__'), 'document JSON is embedded'],
+    [html.includes('window.__HARNESS_STATIC__=true'), 'offline runtime flag is enabled'],
+    [html.includes('demo\\":false'), 'normal editor UI is enabled'],
     [runtime.includes('document:window.__EMBEDDED_DOCUMENT__'), 'editor loader reads embedded JSON'],
+    [runtime.includes('if(window.__HARNESS_STATIC__||cz.getState().isDemo'), 'remote autosave is guarded in static mode'],
     [runtime.includes('__harnessStatic:!0'), 'Supabase/auth client is replaced by the static stub'],
     [runtime.includes('let t="/harness-design/_next/"'), 'Turbopack uses the GitHub Pages base path'],
     [!runtime.includes('bhvgkfojbsyjpajmzdmw.supabase.co'), 'production Supabase host is absent from runtime chunks'],

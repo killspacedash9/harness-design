@@ -9,7 +9,7 @@ The GitHub Pages root redirects to:
 - Project path: `/harness-design/2vD1/`
 - Public URL: `https://killspacedash9.github.io/harness-design/2vD1/`
 
-The `/2vD1` document and all required application assets are embedded locally. The editor runs in demo mode: editor controls and in-memory edits work, but refreshing resets the document.
+The `/2vD1` document and all required application assets are embedded locally. The editor uses the normal application chrome with an explicit offline runtime guard: editor controls and in-memory edits work, but refreshing resets the document.
 
 Runtime services removed or neutralized:
 
