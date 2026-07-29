@@ -11,6 +11,14 @@ The GitHub Pages root redirects to:
 
 The `/2vD1` document and all required application assets are embedded locally. The editor uses the normal application chrome with an explicit offline runtime guard: editor controls and in-memory edits work, but refreshing resets the document.
 
+It can also load a separate same-origin native JSON file before hydration:
+
+```text
+/harness-design/2vD1/?src=/harness-design/data/2vD1.json
+```
+
+See the [live documentation sample](https://killspacedash9.github.io/harness-design/docs/), [`EMBED.md`](EMBED.md), and [`CUSTOM-NODES.md`](CUSTOM-NODES.md).
+
 Runtime services removed or neutralized:
 
 - Supabase database, auth, and realtime
@@ -50,10 +58,12 @@ Open `http://127.0.0.1:4174/harness-design/2vD1/`.
 
 ## Repository layout
 
-- `2vD1/` — static editor route with embedded document
+- `2vD1/` — static editor route with embedded fallback and `?src=` JSON loading
 - `_next/` — mirrored and sanitized application chunks/assets
 - `assets/` — legacy marketing-site assets
-- `docs/` — mirrored public documentation
+- `docs/index.html` — Mintlify/Starlight-style embedding sample
+- `EMBED.md` — iframe, native JSON, sizing, and security guide
+- `CUSTOM-NODES.md` — Frames and reusable multi-connector device templates
 - `src/` — independent editable reconstruction
 - `scripts/build-2vD1.mjs` — live-route mirroring/static conversion
 - `scripts/verify-build.mjs` — endpoint, asset, CSP, and runtime-patch checks

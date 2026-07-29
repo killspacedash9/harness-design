@@ -164,6 +164,7 @@ function privacyMarkup(documentRow) {
 window.__EMBEDDED_DOCUMENT__=${safeJSON(documentRow.document)};
 window.__EMBEDDED_DOCUMENT_META__=${safeJSON(meta)};
 window.__HARNESS_STATIC__=true;
+window.__HARNESS_SOURCE__=new URLSearchParams(location.search).get('src');
 // Belt and suspenders: CSP blocks connections; these stop queued telemetry APIs too.
 try { navigator.sendBeacon = function () { return false; }; } catch (_) {}
 try { window.WebSocket = function () { throw new Error('Network disabled in static build'); }; } catch (_) {}
@@ -233,7 +234,7 @@ async function patchApplicationChunks() {
   let offlineSavePatched = false;
 
   const loaderQuery = 'let{data:t,error:n}=await cB.from("documents").select("document, updated_at, team_id").eq("id",e).single();';
-  const staticLoader = 'let t={document:window.__EMBEDDED_DOCUMENT__,updated_at:window.__EMBEDDED_DOCUMENT_META__.updated_at,team_id:null},n=null;';
+  const staticLoader = 'let _hsDocument=window.__EMBEDDED_DOCUMENT__,_hsSource=window.__HARNESS_SOURCE__;if(_hsSource){let _hsUrl=new URL(_hsSource,location.href);if(_hsUrl.origin!==location.origin)throw Error("Harness JSON must be served from the editor origin");let _hsResponse=await fetch(_hsUrl,{credentials:"same-origin"});if(!_hsResponse.ok)throw Error(`Could not load harness JSON: ${_hsResponse.status} ${_hsResponse.statusText}`);let _hsPayload=await _hsResponse.json();_hsDocument=_hsPayload.document??_hsPayload;if(!_hsDocument||"object"!=typeof _hsDocument||Array.isArray(_hsDocument))throw Error("Harness JSON must contain a native document object")}let t={document:_hsDocument,updated_at:window.__EMBEDDED_DOCUMENT_META__.updated_at,team_id:null},n=null;';
   const saveGuard = 'if(cz.getState().isDemo||cR.getState().isRevisionView)return';
   const offlineSaveGuard = 'if(window.__HARNESS_STATIC__||cz.getState().isDemo||cR.getState().isRevisionView)return';
 

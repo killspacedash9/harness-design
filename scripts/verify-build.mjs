@@ -116,6 +116,7 @@ async function scanExternalEndpoints() {
   console.log('\n── Scanning for external endpoints ──');
   const files = [
     path.join(ROOT, '2vD1', 'index.html'),
+    path.join(ROOT, 'docs', 'index.html'),
     path.join(ROOT, 'index.html'),
     ...findFiles(path.join(ROOT, '_next'), ['.js', '.css']),
     ...findFiles(path.join(ROOT, 'assets'), ['.js', '.css']),
@@ -186,6 +187,7 @@ async function verifyAssetReferences() {
   console.log('\n── Verifying asset references ──');
   const files = [
     path.join(ROOT, '2vD1', 'index.html'),
+    path.join(ROOT, 'docs', 'index.html'),
     path.join(ROOT, 'index.html'),
   ];
 
@@ -319,15 +321,26 @@ async function verifyStaticRuntimePatches() {
 
   const checks = [
     [html.includes('window.__EMBEDDED_DOCUMENT__'), 'document JSON is embedded'],
+    [html.includes('window.__HARNESS_SOURCE__=new URLSearchParams'), 'external JSON source parameter is initialized before hydration'],
     [html.includes('window.__HARNESS_STATIC__=true'), 'offline runtime flag is enabled'],
     [html.includes('demo\\":false'), 'normal editor UI is enabled'],
-    [runtime.includes('document:window.__EMBEDDED_DOCUMENT__'), 'editor loader reads embedded JSON'],
+    [runtime.includes('_hsPayload.document??_hsPayload'), 'editor loader accepts native JSON or a document envelope'],
+    [runtime.includes('_hsUrl.origin!==location.origin'), 'editor loader rejects cross-origin JSON sources'],
     [runtime.includes('if(window.__HARNESS_STATIC__||cz.getState().isDemo'), 'remote autosave is guarded in static mode'],
     [runtime.includes('__harnessStatic:!0'), 'Supabase/auth client is replaced by the static stub'],
     [runtime.includes('let t="/harness-design/_next/"'), 'Turbopack uses the GitHub Pages base path'],
     [!runtime.includes('bhvgkfojbsyjpajmzdmw.supabase.co'), 'production Supabase host is absent from runtime chunks'],
     [!SUPABASE_KEY_RE.test(runtime), 'Supabase publishable keys are absent from runtime chunks'],
   ];
+
+  const docsPath = path.join(ROOT, 'docs', 'index.html');
+  const docs = existsSync(docsPath) ? await readFile(docsPath, 'utf8') : '';
+  checks.push(
+    [Boolean(docs), 'sample documentation page exists'],
+    [docs.includes('/harness-design/2vD1/?src=/harness-design/data/2vD1.json'), 'sample embeds the editor with a separate native JSON source'],
+    [existsSync(path.join(ROOT, 'EMBED.md')), 'EMBED.md exists'],
+    [existsSync(path.join(ROOT, 'CUSTOM-NODES.md')), 'CUSTOM-NODES.md exists'],
+  );
 
   for (const [ok, label] of checks) {
     console.log(`  ${ok ? '✓' : '✗'} ${label}`);
