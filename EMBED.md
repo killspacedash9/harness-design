@@ -5,6 +5,7 @@ This repository includes a self-contained Harness Design editor that can be embe
 ## Live routes
 
 - Documentation sample: <https://killspacedash9.github.io/harness-design/docs/>
+- Dedicated embed route: <https://killspacedash9.github.io/harness-design/embed/>
 - Standalone editor: <https://killspacedash9.github.io/harness-design/2vD1/>
 - Native JSON example: <https://killspacedash9.github.io/harness-design/data/2vD1.json>
 
@@ -24,7 +25,7 @@ Host documentation page
 ```html
 <div class="harness-frame">
   <iframe
-    src="/harness-design/2vD1/?src=/harness-design/data/2vD1.json"
+    src="/harness-design/embed/?src=/harness-design/data/2vD1.json"
     title="Interactive harness viewer"
     loading="lazy"
   ></iframe>
@@ -33,8 +34,8 @@ Host documentation page
 <style>
   .harness-frame {
     width: 100%;
-    height: min(80vh, 900px);
-    min-height: 550px;
+    height: min(62vh, 620px);
+    min-height: 520px;
     overflow: hidden;
     border: 1px solid #dfe5e2;
     border-radius: 12px;
@@ -49,14 +50,14 @@ Host documentation page
 </style>
 ```
 
-Use the view selector in the editor's upper-right corner to toggle between **Schematic** and **Layout**. The editor changes the existing pane in place, so in-memory edits survive view switching.
+The dedicated `/embed/` route starts with one **Layout** pane. Use the pane selector in its upper-right corner to change that pane to **Schematic** or add another pane. The editor changes the existing pane in place, so in-memory edits survive view switching.
 
 ## Source URL contract
 
 Pass the native JSON path through the editor's `src` query parameter:
 
 ```text
-/harness-design/2vD1/?src=/harness-design/data/example-harness.json
+/harness-design/embed/?src=/harness-design/data/example-harness.json
 ```
 
 The loader resolves `src` relative to the iframe URL and accepts either format below.
@@ -163,7 +164,7 @@ Parent page:
 ```html
 <button type="button" data-view="Schematic">Schematic</button>
 <button type="button" data-view="Layout">Layout</button>
-<iframe id="harness-editor" src="/harness-design/2vD1/?src=/harness-design/data/example-harness.json"></iframe>
+<iframe id="harness-editor" src="/harness-design/embed/?src=/harness-design/data/example-harness.json"></iframe>
 
 <script>
   const editor = document.querySelector("#harness-editor");
@@ -196,7 +197,7 @@ JSON:       https://killspacedash9.github.io/harness-design/data/example.json
 This is rejected by the current loader and CSP:
 
 ```text
-Editor: https://killspacedash9.github.io/harness-design/2vD1/
+Editor: https://killspacedash9.github.io/harness-design/embed/
 JSON:   https://example.com/example.json
 ```
 
@@ -218,13 +219,86 @@ And validate the parent inside the iframe:
 if (event.origin !== "https://example.com") return;
 ```
 
+## Expand and restore
+
+Keep the embedded control inside the article width by default, then use the browser Fullscreen API for detailed inspection. The toolbar button remains inside the fullscreen element, so it can restore the control without relying on the Escape key.
+
+```html
+<div class="harness-shell" id="harness-shell">
+  <div class="harness-toolbar">
+    <span>Interactive harness</span>
+    <button id="harness-fullscreen" type="button" aria-pressed="false">
+      Expand
+    </button>
+  </div>
+  <iframe
+    src="/harness-design/embed/?src=/harness-design/data/2vD1.json"
+    title="Interactive harness viewer"
+  ></iframe>
+</div>
+```
+
+```css
+.harness-shell {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.harness-shell iframe {
+  width: 100%;
+  height: min(62vh, 620px);
+  min-height: 520px;
+  border: 0;
+}
+
+.harness-shell:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  background: #131716;
+}
+
+.harness-shell:fullscreen iframe {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+```
+
+```js
+const shell = document.querySelector("#harness-shell");
+const button = document.querySelector("#harness-fullscreen");
+
+function syncFullscreenButton() {
+  const expanded = document.fullscreenElement === shell;
+  button.textContent = expanded ? "Restore" : "Expand";
+  button.setAttribute("aria-pressed", String(expanded));
+}
+
+button.addEventListener("click", async () => {
+  if (document.fullscreenElement === shell) {
+    await document.exitFullscreen();
+  } else {
+    await shell.requestFullscreen();
+  }
+});
+
+document.addEventListener("fullscreenchange", syncFullscreenButton);
+```
+
+The deployed sample includes a fixed-viewport fallback for browsers or embedding policies that deny native fullscreen.
+
 ## Responsive sizing
 
 React Flow requires a non-zero viewport. Give the iframe an explicit height or minimum height.
 
 ```css
 .harness-frame {
-  height: clamp(560px, 76vh, 900px);
+  width: 100%;
+  max-width: 100%;
+  height: clamp(520px, 62vh, 620px);
 }
 
 @media (max-width: 640px) {

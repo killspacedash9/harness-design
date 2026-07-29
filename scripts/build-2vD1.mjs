@@ -118,7 +118,7 @@ async function mirrorApplicationAssets(html) {
 const embedSettings = {
   allowEdit: true,
   allowInteract: true,
-  views: ['Schematic', 'Layout'],
+  views: ['Schematic'],
   allowSwitch: true,
   allowSearch: true,
   showBar: true,
@@ -134,6 +134,11 @@ const embedSettings = {
   dashBundles: false,
   showDestinations: false,
   showCoverings: false,
+};
+
+const layoutEmbedSettings = {
+  ...embedSettings,
+  views: ['Layout'],
 };
 
 function privacyMarkup(documentRow) {
@@ -173,7 +178,7 @@ window.gtag=function(){};`;
   return { cspMeta, bootstrap };
 }
 
-function transformLiveHTML(liveHTML, documentRow) {
+function transformLiveHTML(liveHTML, documentRow, settings = embedSettings) {
   let html = liveHTML;
 
   // Reuse existing head nodes so React sees the same server DOM structure.
@@ -197,7 +202,7 @@ function transformLiveHTML(liveHTML, documentRow) {
 
   const propsEnd = '\\"userName\\":\\"$undefined\\"}]';
   if (!html.includes(propsEnd)) throw new Error('Could not find EditorClient props boundary');
-  const escapedSettings = JSON.stringify(embedSettings).replaceAll('"', '\\"');
+  const escapedSettings = JSON.stringify(settings).replaceAll('"', '\\"');
   const staticPropsEnd = `\\"userName\\":\\"$undefined\\",\\"demo\\":false,\\"embedSettings\\":${escapedSettings}}]`;
   html = html.replace(propsEnd, staticPropsEnd);
 
@@ -232,11 +237,14 @@ async function patchApplicationChunks() {
   let supabasePatched = false;
   let sentryPatched = false;
   let offlineSavePatched = false;
+  let staticPanesPatched = false;
 
   const loaderQuery = 'let{data:t,error:n}=await cB.from("documents").select("document, updated_at, team_id").eq("id",e).single();';
   const staticLoader = 'let _hsDocument=window.__EMBEDDED_DOCUMENT__,_hsSource=window.__HARNESS_SOURCE__;if(_hsSource){let _hsUrl=new URL(_hsSource,location.href);if(_hsUrl.origin!==location.origin)throw Error("Harness JSON must be served from the editor origin");let _hsResponse=await fetch(_hsUrl,{credentials:"same-origin"});if(!_hsResponse.ok)throw Error(`Could not load harness JSON: ${_hsResponse.status} ${_hsResponse.statusText}`);let _hsPayload=await _hsResponse.json();_hsDocument=_hsPayload.document??_hsPayload;if(!_hsDocument||"object"!=typeof _hsDocument||Array.isArray(_hsDocument))throw Error("Harness JSON must contain a native document object")}let t={document:_hsDocument,updated_at:window.__EMBEDDED_DOCUMENT_META__.updated_at,team_id:null},n=null;';
   const saveGuard = 'if(cz.getState().isDemo||cR.getState().isRevisionView)return';
   const offlineSaveGuard = 'if(window.__HARNESS_STATIC__||cz.getState().isDemo||cR.getState().isRevisionView)return';
+  const paneHydration = 'r?(h(e.theme),et.default.getState().setPanes(e.views)';
+  const staticPaneHydration = '(r||window.__HARNESS_STATIC__)?(h(e.theme),et.default.getState().setPanes(e.views)';
 
   for (const file of files) {
     let text = await readFile(file, 'utf8');
@@ -244,6 +252,7 @@ async function patchApplicationChunks() {
     if (text.includes(staticLoader)) loaderPatched = true;
     if (text.includes('dsn:void 0,enabled:!1')) sentryPatched = true;
     if (text.includes(offlineSaveGuard)) offlineSavePatched = true;
+    if (text.includes(staticPaneHydration)) staticPanesPatched = true;
 
     if (text.includes('supabase-ssr/0.8.0 createBrowserClient') && text.includes('e.s(["createClient"')) {
       const start = text.indexOf('function rx(){');
@@ -266,6 +275,10 @@ async function patchApplicationChunks() {
     if (text.includes(saveGuard)) {
       text = text.replaceAll(saveGuard, offlineSaveGuard);
       offlineSavePatched = true;
+    }
+    if (text.includes(paneHydration)) {
+      text = text.replaceAll(paneHydration, staticPaneHydration);
+      staticPanesPatched = true;
     }
 
     const sentryDsn = /dsn:"https:\/\/[^\"]+\.sentry\.io\/[^\"]+"/;
@@ -294,6 +307,7 @@ async function patchApplicationChunks() {
   if (!supabasePatched) throw new Error('Supabase client patch was not applied');
   if (!sentryPatched) throw new Error('Sentry initialization patch was not applied');
   if (!offlineSavePatched) throw new Error('Offline save guard patch was not applied');
+  if (!staticPanesPatched) throw new Error('Static initial pane patch was not applied');
   console.log('Disabled document backend, remote saves, Supabase/auth/realtime, Sentry, analytics, feedback, and toolbar transports.');
 }
 
@@ -311,12 +325,15 @@ async function main() {
 
   await mirrorApplicationAssets(liveHTML);
   const html = transformLiveHTML(liveHTML, documentRow);
+  const embedHTML = transformLiveHTML(liveHTML, documentRow, layoutEmbedSettings);
   await mkdir(path.join(ROOT, SHORT_ID), { recursive: true });
+  await mkdir(path.join(ROOT, 'embed'), { recursive: true });
   await writeFile(path.join(ROOT, SHORT_ID, 'index.html'), html);
+  await writeFile(path.join(ROOT, 'embed', 'index.html'), embedHTML);
   await patchApplicationChunks();
   await writeRootRedirect();
 
-  console.log(`Built ${BASE_PATH}/${SHORT_ID}/ with ${Object.keys(documentRow.document).length} document sections.`);
+  console.log(`Built ${BASE_PATH}/${SHORT_ID}/ and ${BASE_PATH}/embed/ with ${Object.keys(documentRow.document).length} document sections.`);
 }
 
 main().catch((error) => {

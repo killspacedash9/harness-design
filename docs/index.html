@@ -274,8 +274,12 @@
     .callout p { margin: 0; font-size: 14px; }
 
     .embed-shell {
-      margin: 34px calc(min(0px, (760px - 100vw) / 2)) 28px;
+      width: 100%;
+      max-width: 100%;
+      margin: 34px 0 28px;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
       border: 1px solid var(--border-strong);
       border-radius: 16px;
       background: #131716;
@@ -307,23 +311,56 @@
       color: #9eaaa5;
       font: 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
     }
-    .open-editor {
+    .embed-action {
+      min-height: 30px;
+      padding: 0 8px;
       display: inline-flex;
       align-items: center;
       gap: 5px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
       color: #dbe5e0;
       text-decoration: none;
       font-size: 12px;
       font-weight: 550;
+      cursor: pointer;
     }
-    .open-editor:hover { color: #18e299; }
-    .open-editor svg { width: 13px; }
+    .embed-action:hover { color: #18e299; background: rgba(255,255,255,.06); }
+    .embed-action svg { width: 14px; height: 14px; }
+    .restore-icon { display: none; }
+    .embed-action[aria-pressed="true"] .expand-icon { display: none; }
+    .embed-action[aria-pressed="true"] .restore-icon { display: block; }
     .harness-frame {
       display: block;
       width: 100%;
-      height: 650px;
+      height: min(62vh, 620px);
+      min-height: 520px;
       border: 0;
       background: #1a1b1e;
+    }
+    .embed-shell:fullscreen,
+    .embed-shell.is-expanded {
+      width: 100vw;
+      max-width: none;
+      height: 100vh;
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      background: #131716;
+    }
+    .embed-shell.is-expanded {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+    }
+    body.embed-expanded { overflow: hidden; }
+    .embed-shell:fullscreen .harness-frame,
+    .embed-shell.is-expanded .harness-frame {
+      flex: 1 1 auto;
+      height: auto;
+      min-height: 0;
     }
     .embed-caption {
       display: flex;
@@ -416,7 +453,7 @@
       h2 { font-size: 24px; margin-top: 46px; }
       .lead { font-size: 16px; }
       .card-grid { grid-template-columns: 1fr; }
-      .embed-shell { margin-inline: -16px; border-left: 0; border-right: 0; border-radius: 0; }
+      .embed-shell { margin-inline: 0; }
       .harness-frame { height: 560px; }
       .source-chip { display: none; }
       .embed-title { flex: 1; }
@@ -518,21 +555,26 @@
 
         <section id="live-example">
           <h2>Live example</h2>
-          <p>This control loads <code>data/2vD1.json</code> at runtime. Use the view selector in the upper-right corner of the canvas to switch between <strong>Schematic</strong> and <strong>Layout</strong>.</p>
+          <p>This control loads <code>data/2vD1.json</code> at runtime and starts with one <strong>Layout</strong> pane. Use the native pane menu to switch its type or add another pane; expand the control when the documentation column gets cramped.</p>
 
-          <div class="embed-shell">
+          <div class="embed-shell" id="harness-embed">
             <div class="embed-toolbar">
               <span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
               <span class="embed-title">Interactive harness</span>
               <span class="source-chip">source: data/2vD1.json</span>
-              <a class="open-editor" href="/harness-design/2vD1/?src=/harness-design/data/2vD1.json" target="_blank" rel="noreferrer">
+              <button class="embed-action" id="embed-fullscreen" type="button" aria-label="Expand harness viewer" aria-pressed="false" title="Expand harness viewer">
+                <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M21 16v5h-5"/></svg>
+                <svg class="restore-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v5H3M16 3v5h5M8 21v-5H3M16 21v-5h5"/></svg>
+                <span class="fullscreen-label">Expand</span>
+              </button>
+              <a class="embed-action" href="/harness-design/embed/?src=/harness-design/data/2vD1.json" target="_blank" rel="noreferrer">
                 Open
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M8 7h9v9"/></svg>
               </a>
             </div>
             <iframe
               class="harness-frame"
-              src="/harness-design/2vD1/?src=/harness-design/data/2vD1.json"
+              src="/harness-design/embed/?src=/harness-design/data/2vD1.json"
               title="Interactive harness schematic and layout editor"
               loading="eager"
             ></iframe>
@@ -555,7 +597,7 @@
             <div class="code-header"><span>HTML</span><button class="copy-button" type="button">Copy</button></div>
             <pre><code><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"harness-frame"</span><span class="tag">&gt;</span>
   <span class="tag">&lt;iframe</span>
-    <span class="attr">src</span>=<span class="string">"/harness-design/2vD1/?src=/harness-design/data/2vD1.json"</span>
+    <span class="attr">src</span>=<span class="string">"/harness-design/embed/?src=/harness-design/data/2vD1.json"</span>
     <span class="attr">title</span>=<span class="string">"Interactive harness viewer"</span>
     <span class="attr">loading</span>=<span class="string">"lazy"</span>
   <span class="tag">&gt;&lt;/iframe&gt;</span>
@@ -564,8 +606,8 @@
 <span class="tag">&lt;style&gt;</span>
   .harness-frame {
     width: 100%;
-    height: min(80vh, 900px);
-    min-height: 550px;
+    height: min(62vh, 620px);
+    min-height: 520px;
     overflow: hidden;
     border: 1px solid #dfe5e2;
     border-radius: 12px;
@@ -649,6 +691,9 @@
     const themeButton = document.querySelector('#theme-toggle');
     const menuButton = document.querySelector('#menu-toggle');
     const scrim = document.querySelector('#mobile-scrim');
+    const embedShell = document.querySelector('#harness-embed');
+    const fullscreenButton = document.querySelector('#embed-fullscreen');
+    const fullscreenLabel = fullscreenButton.querySelector('.fullscreen-label');
 
     const savedTheme = localStorage.getItem('harness-docs-theme');
     if (savedTheme) root.dataset.theme = savedTheme;
@@ -671,6 +716,51 @@
     });
     scrim.addEventListener('click', closeMenu);
     document.querySelectorAll('.sidebar a').forEach(link => link.addEventListener('click', closeMenu));
+
+    function embedIsExpanded() {
+      return document.fullscreenElement === embedShell || embedShell.classList.contains('is-expanded');
+    }
+
+    function syncEmbedExpansion() {
+      const expanded = embedIsExpanded();
+      fullscreenButton.setAttribute('aria-pressed', String(expanded));
+      fullscreenButton.setAttribute('aria-label', expanded ? 'Restore harness viewer' : 'Expand harness viewer');
+      fullscreenButton.title = expanded ? 'Restore harness viewer' : 'Expand harness viewer';
+      fullscreenLabel.textContent = expanded ? 'Restore' : 'Expand';
+      document.body.classList.toggle('embed-expanded', embedShell.classList.contains('is-expanded'));
+    }
+
+    fullscreenButton.addEventListener('click', async () => {
+      if (embedIsExpanded()) {
+        if (document.fullscreenElement === embedShell) {
+          await document.exitFullscreen();
+        } else {
+          embedShell.classList.remove('is-expanded');
+          syncEmbedExpansion();
+        }
+        return;
+      }
+
+      if (embedShell.requestFullscreen) {
+        try {
+          await embedShell.requestFullscreen();
+          return;
+        } catch (_) {
+          // Browser policy denied native fullscreen; use the fixed-viewport fallback.
+        }
+      }
+
+      embedShell.classList.add('is-expanded');
+      syncEmbedExpansion();
+    });
+
+    document.addEventListener('fullscreenchange', syncEmbedExpansion);
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && embedShell.classList.contains('is-expanded')) {
+        embedShell.classList.remove('is-expanded');
+        syncEmbedExpansion();
+      }
+    });
 
     document.querySelectorAll('.copy-button').forEach(button => {
       button.addEventListener('click', async () => {

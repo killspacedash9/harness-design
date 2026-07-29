@@ -116,6 +116,7 @@ async function scanExternalEndpoints() {
   console.log('\n── Scanning for external endpoints ──');
   const files = [
     path.join(ROOT, '2vD1', 'index.html'),
+    path.join(ROOT, 'embed', 'index.html'),
     path.join(ROOT, 'docs', 'index.html'),
     path.join(ROOT, 'index.html'),
     ...findFiles(path.join(ROOT, '_next'), ['.js', '.css']),
@@ -187,6 +188,7 @@ async function verifyAssetReferences() {
   console.log('\n── Verifying asset references ──');
   const files = [
     path.join(ROOT, '2vD1', 'index.html'),
+    path.join(ROOT, 'embed', 'index.html'),
     path.join(ROOT, 'docs', 'index.html'),
     path.join(ROOT, 'index.html'),
   ];
@@ -324,9 +326,11 @@ async function verifyStaticRuntimePatches() {
     [html.includes('window.__HARNESS_SOURCE__=new URLSearchParams'), 'external JSON source parameter is initialized before hydration'],
     [html.includes('window.__HARNESS_STATIC__=true'), 'offline runtime flag is enabled'],
     [html.includes('demo\\":false'), 'normal editor UI is enabled'],
+    [html.includes('\\"views\\":[\\"Schematic\\"]'), 'standalone route starts with a single Schematic pane'],
     [runtime.includes('_hsPayload.document??_hsPayload'), 'editor loader accepts native JSON or a document envelope'],
     [runtime.includes('_hsUrl.origin!==location.origin'), 'editor loader rejects cross-origin JSON sources'],
-    [runtime.includes('if(window.__HARNESS_STATIC__||cz.getState().isDemo'), 'remote autosave is guarded in static mode'],
+    [runtime.includes('if(window.__HARNESS_STATIC__||cz.getState().isDemo||cR.getState().isRevisionView)return'), 'remote autosave is guarded in static mode'],
+    [runtime.includes('(r||window.__HARNESS_STATIC__)?(h(e.theme),et.default.getState().setPanes(e.views)'), 'static routes apply their configured initial panes'],
     [runtime.includes('__harnessStatic:!0'), 'Supabase/auth client is replaced by the static stub'],
     [runtime.includes('let t="/harness-design/_next/"'), 'Turbopack uses the GitHub Pages base path'],
     [!runtime.includes('bhvgkfojbsyjpajmzdmw.supabase.co'), 'production Supabase host is absent from runtime chunks'],
@@ -335,9 +339,15 @@ async function verifyStaticRuntimePatches() {
 
   const docsPath = path.join(ROOT, 'docs', 'index.html');
   const docs = existsSync(docsPath) ? await readFile(docsPath, 'utf8') : '';
+  const embedPath = path.join(ROOT, 'embed', 'index.html');
+  const embed = existsSync(embedPath) ? await readFile(embedPath, 'utf8') : '';
   checks.push(
     [Boolean(docs), 'sample documentation page exists'],
-    [docs.includes('/harness-design/2vD1/?src=/harness-design/data/2vD1.json'), 'sample embeds the editor with a separate native JSON source'],
+    [Boolean(embed), 'dedicated embed route exists'],
+    [embed.includes('\\"views\\":[\\"Layout\\"]'), 'embed route starts with a single Layout pane'],
+    [docs.includes('/harness-design/embed/?src=/harness-design/data/2vD1.json'), 'sample embeds the Layout-first route with a separate native JSON source'],
+    [docs.includes('id="embed-fullscreen"') && docs.includes('requestFullscreen'), 'sample includes expand and restore controls'],
+    [docs.includes('max-width: 100%') && !docs.includes('calc(min(0px'), 'sample embed is constrained to the article width'],
     [existsSync(path.join(ROOT, 'EMBED.md')), 'EMBED.md exists'],
     [existsSync(path.join(ROOT, 'CUSTOM-NODES.md')), 'CUSTOM-NODES.md exists'],
   );

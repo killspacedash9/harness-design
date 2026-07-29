@@ -14,8 +14,10 @@ The `/2vD1` document and all required application assets are embedded locally. T
 It can also load a separate same-origin native JSON file before hydration:
 
 ```text
-/harness-design/2vD1/?src=/harness-design/data/2vD1.json
+/harness-design/embed/?src=/harness-design/data/2vD1.json
 ```
+
+The dedicated `/embed/` route starts with one Layout pane and retains the native pane switch/add controls. The documentation sample constrains it to the article width and adds expand/restore fullscreen controls.
 
 See the [live documentation sample](https://killspacedash9.github.io/harness-design/docs/), [`EMBED.md`](EMBED.md), and [`CUSTOM-NODES.md`](CUSTOM-NODES.md).
 
@@ -59,6 +61,7 @@ Open `http://127.0.0.1:4174/harness-design/2vD1/`.
 ## Repository layout
 
 - `2vD1/` — static editor route with embedded fallback and `?src=` JSON loading
+- `embed/` — Layout-first single-pane route for iframe use
 - `_next/` — mirrored and sanitized application chunks/assets
 - `assets/` — legacy marketing-site assets
 - `docs/index.html` — Mintlify/Starlight-style embedding sample
