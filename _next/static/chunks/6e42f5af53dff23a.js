@@ -53,7 +53,260 @@ ${w}`}({domain:m.host,address:v,statement:y,uri:m.href,version:"1",chainId:_,non
 ║ For more information, visit:                                              ║
 ║ https://supabase.com/docs/guides/auth/server-side                         ║
 ╚════════════════════════════════════════════════════════════════════════════╝
-    `)}function rx(){function q(d=null){let p={data:d,error:null,count:Array.isArray(d)?d.length:null,status:200,statusText:"OK"},b={};for(let m of["select","eq","neq","gt","gte","lt","lte","like","ilike","is","in","contains","containedBy","range","order","limit","match","filter","not","or","textSearch","insert","upsert","update","delete"])b[m]=()=>b;b.single=async()=>({...p,data:Array.isArray(p.data)?p.data[0]??null:p.data});b.maybeSingle=b.single;b.then=(r,j)=>Promise.resolve(p).then(r,j);return b}function h(){let c={on:()=>c,subscribe:f=>(queueMicrotask(()=>f&&f("SUBSCRIBED")),c),send:async()=>"ok",track:async()=>"ok",untrack:async()=>"ok",unsubscribe:async()=>"ok",presenceState:()=>({})};return c}return{__harnessStatic:!0,from:()=>q([]),rpc:async()=>({data:null,error:null}),auth:{getSession:async()=>({data:{session:null},error:null}),getUser:async()=>({data:{user:null},error:null}),onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}}),signOut:async()=>({error:null}),updateUser:async()=>({data:{user:null},error:null})},realtime:{setAuth(){}},channel:h,removeChannel:async()=>"ok",storage:{from:()=>({upload:async()=>({data:null,error:null}),download:async()=>({data:null,error:null}),getPublicUrl:()=>({data:{publicUrl:""}})})}}}e.s(["createClient",()=>rx],920755)}]);
+    `)}function rx() {
+  var LS_PREFIX = 'hd.';
+  function readTable(table) {
+    try {
+      var v = localStorage.getItem(LS_PREFIX + table);
+      return v ? JSON.parse(v) : [];
+    } catch (e) { return []; }
+  }
+  function writeTable(table, rows) {
+    try { localStorage.setItem(LS_PREFIX + table, JSON.stringify(rows)); } catch (e) {}
+  }
+  function now() { return new Date().toISOString(); }
+  function shortId() {
+    var chars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var s = '';
+    for (var i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+    return s;
+  }
+  function project(row, select) {
+    if (!select || select === '*') return row;
+    if (select.indexOf('!') >= 0 || select.indexOf('(') >= 0) return row;
+    var out = {};
+    for (var c of select.split(',').map(function (s) { return s.trim(); }).filter(Boolean)) out[c] = row[c];
+    return out;
+  }
+  function applyLocalFilters(rows, st) {
+    for (var i = 0; i < st.filters.length; i++) {
+      var f = st.filters[i], key = f[0], op = f[1], val = f[2];
+      if (op === 'eq') rows = rows.filter(function (r) { return String(r[key]) === String(val); });
+      if (op === 'is') rows = rows.filter(function (r) { return val === null || val === 'null' ? r[key] == null : String(r[key]) === String(val); });
+    }
+    if (st.order) {
+      var parts = st.order.split('.');
+      var field = parts[0], dir = parts[1];
+      rows = rows.slice().sort(function (a, b) { return String(a[field] ?? '').localeCompare(String(b[field] ?? '')); });
+      if (dir === 'desc') rows.reverse();
+    }
+    if (st.limit != null) rows = rows.slice(0, st.limit);
+    return rows;
+  }
+  function buildUrl(table, st) {
+    var p = new URLSearchParams();
+    if (st.select && st.select !== '*') p.set('select', st.select);
+    for (var i = 0; i < st.filters.length; i++) p.set(st.filters[i][0], st.filters[i][1] + '.' + st.filters[i][2]);
+    if (st.order) p.set('order', st.order);
+    if (st.limit != null) p.set('limit', String(st.limit));
+    return '/supabase/rest/v1/' + table + '?' + p.toString();
+  }
+  function parseResp(r) {
+    return r.text().then(function (txt) { return txt ? JSON.parse(txt) : null; });
+  }
+  function remoteExec(method, url, body, single) {
+    var headers = { 'content-type': 'application/json' };
+    if (single) headers['accept'] = 'application/vnd.pgrst.object+json';
+    return fetch(url, { method: method, headers: headers, body: body }).then(function (r) {
+      if (!r.ok) return null;
+      return parseResp(r);
+    }).catch(function () { return null; });
+  }
+  function localExec(table, st) {
+    var data = readTable(table);
+    var res;
+    if (st.method === 'GET') {
+      var rows = applyLocalFilters(data, st).map(function (r) { return project(r, st.select); });
+      res = st.single ? (rows[0] ?? null) : rows;
+      return { data: res, error: null };
+    }
+    if (st.method === 'PATCH') {
+      var changed = [];
+      data = data.map(function (row) {
+        if (applyLocalFilters([row], st).length) {
+          var next = Object.assign({}, row, st.body, { updated_at: now() });
+          changed.push(next);
+          return next;
+        }
+        return row;
+      });
+      writeTable(table, data);
+      return { data: (st.single ? (changed[0] ?? null) : changed.map(function (r) { return project(r, st.select); })), error: null };
+    }
+    if (st.method === 'POST') {
+      var rowsIn = Array.isArray(st.body) ? st.body : [st.body];
+      var idBase = 0;
+      for (var r0 of data) { var n = Number(r0.id) || 0; if (n > idBase) idBase = n; }
+      var inserted = rowsIn.map(function (r) { return Object.assign({ id: ++idBase, created_at: now(), updated_at: now() }, r); });
+      data = data.concat(inserted);
+      writeTable(table, data);
+      return { data: (st.single ? inserted[0] : inserted.map(function (r) { return project(r, st.select); })), error: null };
+    }
+    if (st.method === 'DELETE') {
+      var removed = applyLocalFilters(data, st);
+      data = data.filter(function (row) { return removed.indexOf(row) === -1; });
+      writeTable(table, data);
+      return { data: removed, error: null };
+    }
+    return { data: null, error: { message: 'Method not allowed' } };
+  }
+  function qb(table) {
+    var st = { select: '*', filters: [], order: null, limit: null, single: false, method: 'GET', body: null };
+    var b = {
+      select(cols) { st.select = cols; return b; },
+      eq(c, v) { st.filters.push([c, 'eq', v]); return b; },
+      neq(c, v) { st.filters.push([c, 'neq', v]); return b; },
+      gt(c, v) { st.filters.push([c, 'gt', v]); return b; },
+      gte(c, v) { st.filters.push([c, 'gte', v]); return b; },
+      lt(c, v) { st.filters.push([c, 'lt', v]); return b; },
+      lte(c, v) { st.filters.push([c, 'lte', v]); return b; },
+      like(c, v) { st.filters.push([c, 'like', v]); return b; },
+      ilike(c, v) { st.filters.push([c, 'ilike', v]); return b; },
+      is(c, v) { st.filters.push([c, 'is', v === null ? 'null' : v]); return b; },
+      in(c, v) { st.filters.push([c, 'in', '(' + v.join(',') + ')']); return b; },
+      contains(c, v) { st.filters.push([c, 'contains', JSON.stringify(v)]); return b; },
+      containedBy(c, v) { st.filters.push([c, 'containedBy', JSON.stringify(v)]); return b; },
+      range(c, a, z) { st.filters.push([c, 'range', '(' + a + ',' + z + ')']); return b; },
+      match(m) { for (var k in m) st.filters.push([k, 'eq', m[k]]); return b; },
+      order(c, o) { st.order = c + '.' + ((o && o.ascending === false) ? 'desc' : 'asc'); return b; },
+      limit(n) { st.limit = n; return b; },
+      single() { st.single = true; return b; },
+      maybeSingle() { st.single = true; return b; },
+      insert(body) { st.method = 'POST'; st.body = body; return b; },
+      upsert(body) { st.method = 'POST'; st.body = body; return b; },
+      update(body) { st.method = 'PATCH'; st.body = body; return b; },
+      delete() { st.method = 'DELETE'; return b; },
+      then(res, rej) { return exec().then(res, rej); },
+      catch(rej) { return exec().catch(rej); },
+      finally(fn) { return exec().finally(fn); },
+    };
+    function exec() {
+      var method = st.method;
+      if (method === 'GET') {
+        return remoteExec('GET', buildUrl(table, st), null, st.single).then(function (remote) {
+          if (remote !== null) return { data: remote, error: null, count: Array.isArray(remote) ? remote.length : null };
+          var local = localExec(table, st);
+          return local.error ? local : { data: local.data, error: null, count: Array.isArray(local.data) ? local.data.length : null };
+        }).catch(function (e) { return { data: null, error: { message: e && e.message ? e.message : String(e) } }; });
+      }
+      var body = st.body != null ? JSON.stringify(st.body) : undefined;
+      return remoteExec(method, buildUrl(table, st), body, st.single).then(function (remote) {
+        if (remote !== null) return { data: remote, error: null, count: Array.isArray(remote) ? remote.length : null };
+        var local = localExec(table, st);
+        return local.error ? local : { data: local.data, error: null, count: Array.isArray(local.data) ? local.data.length : null };
+      }).catch(function (e) { return { data: null, error: { message: e && e.message ? e.message : String(e) } }; });
+    }
+    return b;
+  }
+  function rpcLocal(name, args) {
+    var data = readTable('documents');
+    switch (name) {
+      case 'get_effective_plan': return { data: 'free', error: null };
+      case 'is_team_active': return { data: false, error: null };
+      case 'get_my_invites': return { data: [], error: null };
+      case 'get_team_members': return { data: [], error: null };
+      case 'get_revision_authors': return { data: [], error: null };
+      case 'create_document_revision': {
+        var doc = data.find(function (d) { return String(d.id) === String(args.doc_id); });
+        if (!doc) return { data: null, error: { message: 'Document not found' } };
+        var revs = readTable('document_revisions').filter(function (r) { return String(r.document_id) === String(doc.id); });
+        var rev = { id: nextId('document_revisions'), document_id: doc.id, revision_number: revs.length + 1, message: args.msg || null, author_id: null, snapshot: doc.document, created_at: now() };
+        writeTable('document_revisions', readTable('document_revisions').concat([rev]));
+        return { data: rev, error: null };
+      }
+      case 'restore_document_revision': {
+        var revs2 = readTable('document_revisions');
+        var rev2 = revs2.find(function (r) { return String(r.id) === String(args.rev_id); });
+        if (!rev2) return { data: null, error: { message: 'Revision not found' } };
+        var doc2 = data.find(function (d) { return String(d.id) === String(rev2.document_id); });
+        if (!doc2) return { data: null, error: { message: 'Document not found' } };
+        doc2.document = rev2.snapshot;
+        doc2.updated_at = now();
+        writeTable('documents', data);
+        return { data: Object.assign({}, rev2, { updated_at: doc2.updated_at }), error: null };
+      }
+      case 'set_document_team':
+      case 'remove_document_team': return { data: now(), error: null };
+      case 'create_team':
+      case 'accept_team_invite': return { data: null, error: null };
+      default: return { data: null, error: null };
+    }
+  }
+  function nextId(table) {
+    var rows = readTable(table);
+    var mx = 0;
+    for (var r of rows) { var n = Number(r.id) || 0; if (n > mx) mx = n; }
+    return mx + 1;
+  }
+  function rpc(name, args) {
+    var single = false;
+    var exec = function () {
+      var headers = { 'content-type': 'application/json' };
+      if (single) headers['accept'] = 'application/vnd.pgrst.object+json';
+      return fetch('/supabase/rest/v1/rpc/' + encodeURIComponent(name), { method: 'POST', headers: headers, body: JSON.stringify(args || {}) }).then(function (r) {
+        if (!r.ok) return null;
+        return r.text().then(function (txt) { return txt ? JSON.parse(txt) : null; });
+      }).catch(function () { return null; }).then(function (remote) {
+        if (remote !== null) return { data: remote, error: null, count: Array.isArray(remote) ? remote.length : null };
+        var local = rpcLocal(name, args);
+        return local.error ? local : { data: local.data, error: null, count: Array.isArray(local.data) ? local.data.length : null };
+      });
+    };
+    var b = {
+      single() { single = true; return b; },
+      maybeSingle() { single = true; return b; },
+      then(res, rej) { return exec().then(res, rej); },
+      catch(rej) { return exec().catch(rej); },
+      finally(fn) { return exec().finally(fn); },
+    };
+    return b;
+  }
+  function channel() {
+    var c = {
+      on() { return c; },
+      subscribe(cb) { if (cb) queueMicrotask(function () { try { cb('SUBSCRIBED'); } catch (e) {} }); return c; },
+      send() { return Promise.resolve('ok'); },
+      track() { return Promise.resolve('ok'); },
+      untrack() { return Promise.resolve('ok'); },
+      presenceState() { return {}; },
+      unsubscribe() { return Promise.resolve('ok'); },
+    };
+    return c;
+  }
+  var LOCAL_USER = {
+    id: 'local-user',
+    aud: 'authenticated',
+    role: 'authenticated',
+    email: 'local@harness.local',
+    email_confirmed_at: now(),
+    user_metadata: { full_name: 'Local User' },
+    app_metadata: { provider: 'local' },
+    created_at: now(),
+  };
+  return {
+    __harnessStatic: true,
+    from: qb,
+    rpc: rpc,
+    auth: {
+      getSession: async function () {
+        return { data: { session: { access_token: 'local', refresh_token: 'local', expires_in: 3600, expires_at: 0, user: LOCAL_USER } }, error: null };
+      },
+      getUser: async function () { return { data: { user: LOCAL_USER }, error: null }; },
+      onAuthStateChange: function () { return { data: { subscription: { unsubscribe: function () {} } } }; },
+      signOut: async function () { return { error: null }; },
+      updateUser: async function () { return { data: { user: LOCAL_USER }, error: null }; },
+      oauth: {
+        listGrants: async function () { return { data: [], error: null }; },
+        revokeGrant: async function () { return { error: null }; },
+      },
+    },
+    realtime: { setAuth: function () {}, channel: channel, removeChannel: async function () { return 'ok'; } },
+    channel: channel,
+    removeChannel: async function () { return 'ok'; },
+    storage: { from: function () { return { upload: async function () { return { data: null, error: null }; }, download: async function () { return { data: null, error: null }; }, getPublicUrl: function () { return { data: { publicUrl: '' } }; } }; } },
+    functions: { invoke: async function () { return { data: null, error: null }; } },
+  };
+}e.s(["createClient",()=>rx],920755)}]);
 
 //# debugId=819cd4cb-4352-0c4b-cc87-7739bf61a759
 //# sourceMappingURL=72ac936f3fa34503.js.map

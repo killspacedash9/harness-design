@@ -6,7 +6,7 @@
       "title": "ELK-110825",
       "public": true,
       "team_id": null,
-      "user_id": "1f6c1445-71a5-441e-af74-9d295b59656e",
+      "user_id": "local-user",
       "document": {
         "mates": [
           {
@@ -1014,5 +1014,55 @@
   "teams": [],
   "team_members": [],
   "team_invites": [],
-  "editor_state": []
+  "editor_state": [
+    {
+      "id": 1,
+      "created_at": "2026-08-03T13:42:46.849Z",
+      "updated_at": "2026-08-03T13:42:46.849Z",
+      "user_id": "local-user",
+      "document_id": 14
+    },
+    {
+      "id": 2,
+      "created_at": "2026-08-03T13:43:46.300Z",
+      "updated_at": "2026-08-03T13:43:46.301Z",
+      "user_id": "local-user",
+      "document_id": 14
+    },
+    {
+      "id": 3,
+      "created_at": "2026-08-03T13:43:51.511Z",
+      "updated_at": "2026-08-03T13:43:51.511Z",
+      "user_id": "local-user",
+      "document_id": 15
+    },
+    {
+      "id": 4,
+      "created_at": "2026-08-03T13:44:51.220Z",
+      "updated_at": "2026-08-03T13:44:51.220Z",
+      "user_id": "local-user",
+      "document_id": 15
+    },
+    {
+      "id": 5,
+      "created_at": "2026-08-03T13:45:51.242Z",
+      "updated_at": "2026-08-03T13:45:51.242Z",
+      "user_id": "local-user",
+      "document_id": 15
+    },
+    {
+      "id": 6,
+      "created_at": "2026-08-03T13:46:02.833Z",
+      "updated_at": "2026-08-03T13:46:02.833Z",
+      "user_id": "local-user",
+      "document_id": 16
+    },
+    {
+      "id": 7,
+      "created_at": "2026-08-03T13:46:48.140Z",
+      "updated_at": "2026-08-03T13:46:48.140Z",
+      "user_id": "local-user",
+      "document_id": 14
+    }
+  ]
 }
